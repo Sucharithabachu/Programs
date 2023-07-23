@@ -1,0 +1,297 @@
+html:
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<app-header></app-header>
+<app-navbar></app-navbar>
+<div class="formClass">
+    <mat-accordion>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    1.Personal Information
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <form [formGroup]="personalInfoForm">
+                <table class="example-full-width" cellspacing="0">
+                    <tr>
+                        <td>
+                            <mat-form-field>
+                                <mat-label>First Name</mat-label>
+                                <input matInput placeholder="Ex. John" formControlName="firstName">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field>
+                                <mat-label>Last Name</mat-label>
+                                <input matInput placeholder="Ex. Doe" formControlName="lastName">
+                            </mat-form-field>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <mat-form-field>
+                                <mat-label>Display Name</mat-label>
+                                <input matInput placeholder="Ex. John Doe" formControlName="displayName">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field>
+                                <mat-label>DOB</mat-label>
+                                <input matInput [matDatepicker]="dobDatepicker" formControlName="dob"
+                                    required>
+                                <mat-hint>MM/DD/YYYY</mat-hint>
+                                <mat-datepicker-toggle matIconSuffix [for]="dobDatepicker"></mat-datepicker-toggle>
+                                <mat-datepicker #dobDatepicker></mat-datepicker>
+                            </mat-form-field>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <mat-form-field >
+                                <mat-label>Emergency Contact Person</mat-label>
+                                <input matInput placeholder="Ex. Jessi Doe" formControlName="emergencyContactPerson">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field >
+                                <mat-label>Emergency Contact Mobile</mat-label>
+                                <input matInput #emergencyContactMobile maxlength="10" placeholder="Ex. 1234567891" required formControlName="emergencyContactMobile">
+                                <mat-hint align="end">{{emergencyContactMobile.value.length}} / 10</mat-hint>
+                            </mat-form-field>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <mat-form-field>
+                                <mat-label>Address</mat-label>
+                                <textarea matInput placeholder="Full Address" formControlName="full address"></textarea>
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            
+                        </td>
+                    </tr>
+                    <button mat-raised-button color="accent" type="submit" >Save</button>
+                </table>
+            </form>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    2.Official Information
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <form [formGroup]="officialInformationForm">
+                <table class="example-full-width" cellspacing="0">
+                    <tr>
+                        <td>
+                            <mat-form-field>
+                                <mat-label>Sap ID</mat-label>
+                                <input matInput placeholder="Ex. 123456" formControlName="sapId">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field>
+                                <mat-label>LDAP ID</mat-label>
+                                <input matInput placeholder="Ex. 123456" formControlName="ldapId">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field>
+                                <mat-label>Mphasis Email ID</mat-label>
+                                <input matInput placeholder="Ex. 123456" formControlName="mphasisEmailId">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field>
+                                <mat-label>Fedex Email ID</mat-label>
+                                <input matInput placeholder="Ex. 123456" formControlName="fedexEmailId">
+                            </mat-form-field>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <mat-form-field>
+                                <mat-label>Personal Email ID</mat-label>
+                                <input matInput placeholder="Ex. 123456" formControlName="personalEmailId">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field>
+                                <mat-label>Work Phone</mat-label>
+                                <input matInput placeholder="Ex. 123456" formControlName="workPhone">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field>
+                                <mat-label>Home Phone</mat-label>
+                                <input matInput placeholder="Ex. 123456" formControlName="homePhone">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field>
+                                <mat-label>Mobile</mat-label>
+                                <input matInput placeholder="Ex. 123456" formControlName="mobile">
+                            </mat-form-field>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <mat-form-field>
+                                <mat-label>Reporting Manager</mat-label>
+                                <input matInput placeholder="Ex. 123456" formControlName="reportingManager">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field>
+                                <mat-label>Work Shift</mat-label>
+                                <mat-select formControlName="workShift" required>
+                                    <mat-option value="day">Day</mat-option>
+                                    <mat-option value="night">Night</mat-option>
+                                </mat-select>    
+                                
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field>
+                                <mat-label>Cubicle Number</mat-label>
+                                <input matInput placeholder="Ex. 123456" formControlName="cubicleNumber">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field>
+                                <mat-label>Level</mat-label>
+                                <mat-select formControlName="level" required>
+                                    <mat-option value="one">L-1</mat-option>
+                                    <mat-option value="two">L-2</mat-option>
+                                    <mat-option value="three">L-3</mat-option>
+                                    <mat-option value="four">L-4</mat-option>
+                                    <mat-option value="five">L-5</mat-option>
+                                    <mat-option value="six">L-6</mat-option>
+                                    <mat-option value="seven">L-7</mat-option>
+                                    <mat-option value="eight">L-8</mat-option>
+                                    <mat-option value="nine">L-9</mat-option>
+                                    <mat-option value="ten">L-10</mat-option>
+                                    <mat-option value="eleven">L-11</mat-option>
+                                    <mat-option value="twelve">L-12</mat-option>
+                               
+                                </mat-select>
+                            </mat-form-field>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <mat-form-field>
+                                <mat-label>Designation</mat-label>
+                                <input matInput placeholder="Ex. 123456" formControlName="designation">
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field>
+                                <mat-label>Location</mat-label>
+                                <mat-select formControlName="location" required>
+                                    <mat-option value="offshore">Off-Shore</mat-option>
+                                    <mat-option value="onshore">On-Shore</mat-option>
+                                </mat-select>    
+                                
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field>
+                                <mat-label>Billing Type</mat-label>
+                                <mat-select formControlName="billingType" required>
+                                    <mat-option value="billiable">Billable</mat-option>
+                                    <mat-option value="nonBilliable">Non-Billable</mat-option>
+                                </mat-select>    
+                                
+                            </mat-form-field>
+                        </td>
+                    </tr>
+                    <button mat-raised-button color="accent" type="submit" >Save</button>
+                </table>
+            </form>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    3.User Roles And Setting
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <h1>Form to be added</h1>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+component.ts
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-user',
+  templateUrl: './user.component.html',
+  styleUrls: ['./user.component.css'],
+})
+
+export class UserComponent implements OnInit {
+  personalInfoForm!: FormGroup;
+  officialInformationForm!: FormGroup;
+  
+  
+  constructor(private formBuilder: FormBuilder) {}
+  
+  ngOnInit() {
+  // Create the personalInfoForm with its form controls and validations
+  this.personalInfoForm = this.formBuilder.group({
+    firstName: ['', Validators.required],
+    lastName: ['', Validators.required],
+    displayName: ['', Validators.required],
+    dob: ['', Validators.required],
+    emergencyContactPerson: ['', Validators.required],
+    emergencyContactMobile: [
+    '',
+    [Validators.required, Validators.pattern(/^\d{10}$/)],
+    ],
+    address: ['', Validators.required],
+    profilePicture: ['', Validators.required],
+  });
+  
+  // Create the officialInformationForm with its form controls and validations
+  this.officialInformationForm = this.formBuilder.group({
+    sapId: ['', Validators.required],
+    ldapId: ['', Validators.required],
+    mphasisEmailId: ['', Validators.required],
+    fedexEmailId: ['', Validators.required],
+    personalEmailId: ['', Validators.required],
+    workPhone: ['', Validators.required],
+    homePhone: ['', Validators.required],
+    mobile: ['', Validators.required],
+    reportingManager: ['', Validators.required],
+    workLocation: ['', Validators.required],
+    workShift: ['', Validators.required],
+    cubicleNumber: ['', Validators.required],
+    level: ['', Validators.required],
+    designation: ['', Validators.required],
+    location: ['', Validators.required],
+    billingType: ['', Validators.required],
+  });
+  }
+  
+
+  onSubmitPersonalInfo() {
+  if (this.personalInfoForm.valid) {
+  // Process the personal info form data here, e.g., save to the server
+  const personalFormData = this.personalInfoForm.value;
+  console.log('Personal Information Form Data:', personalFormData);
+  }
+  }
+  
+  onSubmitOfficialInfo() {
+  if (this.officialInformationForm.valid) {
+  // Process the official info form data here, e.g., save to the server
+  const personalFormData = this.officialInformationForm.value;
+  console.log('Personal Information Form Data:', personalFormData);
+  }
+  }
+
+  }
