@@ -1,4 +1,4 @@
-package com.mphasis.day3;
+package com.training.day3;
 
 public class BuildPatternExample {
     public static void main(String[] args) {

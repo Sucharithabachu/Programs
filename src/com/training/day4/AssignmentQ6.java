@@ -1,4 +1,4 @@
-package com.mphasis.day4;
+package com.training.day4;
 
 class Person {
     private String name;

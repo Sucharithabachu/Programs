@@ -1,4 +1,4 @@
-package com.mphasis.day2;
+package com.training.day2;
 
 import java.util.*;
 

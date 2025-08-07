@@ -1,4 +1,4 @@
-package com.mphasis.day1;
+package com.training.day1;
 import java.util.Scanner;
 
 public class JavaAssignment1 {

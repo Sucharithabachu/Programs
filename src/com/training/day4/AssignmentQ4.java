@@ -1,4 +1,4 @@
-package com.mphasis.day4;
+package com.training.day4;
 
 abstract class Vehicle {
     public abstract void startEngine();
