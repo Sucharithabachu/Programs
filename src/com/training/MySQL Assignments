@@ -179,3 +179,94 @@ HAVING COUNT(e.StudentID) > 5;
 -- 30. Delete all students not enrolled in any course.
 DELETE FROM Students
 WHERE StudentID NOT IN (SELECT DISTINCT StudentID FROM Enrollments);
+
+===========================================
+--SQL ASSIGNMENT2
+===========================================
+-- ========================
+-- BASIC QUERIES
+-- ========================
+
+-- Create a database called Company DB.
+CREATE DATABASE CompanyDB;
+USE CompanyDB;
+
+-- Create a table Employees with EmpID, FirstName, LastName, DOB, Salary.
+CREATE TABLE Employees (
+    EmpID INT PRIMARY KEY AUTO_INCREMENT,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    DOB DATE,
+    Salary DECIMAL(10,2)
+);
+
+-- Insert at least 10 employee records into the Employees table.
+INSERT INTO Employees (FirstName, LastName, DOB, Salary) VALUES
+('John', 'Smith', '1985-03-12', 55000),
+('Jane', 'Doe', '1990-07-22', 48000),
+('Robert', 'Johnson', '1982-11-05', 72000),
+('Emily', 'Davis', '1995-01-17', 51000),
+('Michael', 'Brown', '1988-09-23', 45000),
+('Sarah', 'Miller', '1979-05-30', 80000),
+('David', 'Wilson', '1983-12-10', 67000),
+('Laura', 'Moore', '1992-08-14', 60000),
+('Daniel', 'Taylor', '1987-04-25', 53000),
+('Sophia', 'Anderson', '1994-10-11', 47000);
+
+-- Select all columns from the Employees table.
+SELECT * FROM Employees;
+
+-- Select employees whose salary is greater than 50,000.
+SELECT * FROM Employees WHERE Salary > 50000;
+
+-- Update the salary of employee with EmpID 5 to 60,000.
+UPDATE Employees SET Salary = 60000 WHERE EmpID = 5;
+
+-- Delete the record of the employee with EmpID=10.
+DELETE FROM Employees WHERE EmpID = 10;
+
+-- Add a new column Department to the Employees table.
+ALTER TABLE Employees ADD Department VARCHAR(50);
+
+-- Rename the Department column to DeptName.
+ALTER TABLE Employees CHANGE Department DeptName VARCHAR(50);
+
+-- Retrieve employees ordered by last name ascending.
+SELECT * FROM Employees ORDER BY LastName ASC;
+
+
+-- ========================
+-- INTERMEDIATE QUERIES
+-- ========================
+
+-- Select distinct departments from the Employees table.
+SELECT DISTINCT DeptName FROM Employees;
+
+-- Find the average salary of employees.
+SELECT AVG(Salary) AS AverageSalary FROM Employees;
+
+-- Count the number of employees in each department.
+SELECT DeptName, COUNT(*) AS EmployeeCount
+FROM Employees
+GROUP BY DeptName;
+
+-- List employees whose last name starts with 'S'.
+SELECT * FROM Employees WHERE LastName LIKE 'S%';
+
+-- Find employees born between 1980 and 1990.
+SELECT * FROM Employees WHERE DOB BETWEEN '1980-01-01' AND '1990-12-31';
+
+-- Select employees with salary between 40,000 and 60,000.
+SELECT * FROM Employees WHERE Salary BETWEEN 40000 AND 60000;
+
+-- Select top 5 highest-paid employees.
+SELECT * FROM Employees ORDER BY Salary DESC LIMIT 5;
+
+-- Find employees whose first name contains 'an'.
+SELECT * FROM Employees WHERE FirstName LIKE '%an%';
+
+-- Retrieve employees whose salary is not NULL.
+SELECT * FROM Employees WHERE Salary IS NOT NULL;
+
+-- Display employee full names by concatenating first and last names.
+SELECT CONCAT(FirstName, ' ', LastName) AS FullName FROM Employees;
