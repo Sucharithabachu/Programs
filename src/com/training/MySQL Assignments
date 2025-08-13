@@ -1,0 +1,181 @@
+Database: SchoolDb 
+Tables:Students, Courses, Enrollments
+===========================================
+--SQL ASSIGNMENT1
+===========================================
+-- 1. Create a database named SchoolDB.
+CREATE DATABASE SchoolDB;
+
+-- To use the database
+USE SchoolDB;
+
+-- 2. Create a table Students with columns: StudentID (INT, Primary Key), Name (VARCHAR), Age (INT), Grade (VARCHAR).
+CREATE TABLE Students (
+    StudentID INT PRIMARY KEY,
+    Name VARCHAR(50),
+    Age INT,
+    Grade VARCHAR(5)
+);
+
+-- 3. Insert at least 5 records into the Students table.
+INSERT INTO Students (StudentID, Name, Age, Grade) VALUES
+(1, 'Ram', 14, 'B'),
+(2, 'Shyam', 16, 'A'),
+(3, 'Neil', 17, 'B'),
+(4, 'Isha', 15, 'C'),
+(5, 'Ila', 18, 'A');
+
+-- 4. Select all students who are older than 15.
+SELECT * FROM Students
+WHERE Age > 15;
+
+-- 5. Update the grade of a student with StudentID = 3 to 'A'.
+UPDATE Students
+SET Grade = 'A'
+WHERE StudentID = 3;
+
+-- 6. Delete a student record with StudentID = 5.
+DELETE FROM Students
+WHERE StudentID = 5;
+
+-- 7. Create a table Courses with columns: CourseID (INT, Primary Key), CourseName (VARCHAR), Instructor (VARCHAR).
+CREATE TABLE Courses (
+    CourseID INT PRIMARY KEY,
+    CourseName VARCHAR(50),
+    Instructor VARCHAR(50)
+);
+
+-- 8. Insert at least 3 records into Courses.
+INSERT INTO Courses (CourseID, CourseName, Instructor) VALUES
+(1, 'Mathematics', 'Hari'),
+(2, 'Physics', 'Kavitha'),
+(3, 'History', 'GSR');
+
+-- 9. Create a table Enrollments with foreign keys referencing Students and Courses.
+CREATE TABLE Enrollments (
+    EnrollmentID INT PRIMARY KEY,
+    StudentID INT,
+    CourseID INT,
+    FOREIGN KEY (StudentID) REFERENCES Students(StudentID),
+    FOREIGN KEY (CourseID) REFERENCES Courses(CourseID)
+);
+
+-- 10. Find all students enrolled in 'Mathematics'.
+SELECT s.*
+FROM Students s
+JOIN Enrollments e ON s.StudentID = e.StudentID
+JOIN Courses c ON e.CourseID = c.CourseID
+WHERE c.CourseName = 'Mathematics';
+
+-- 11. Count how many students are enrolled in each course.
+SELECT c.CourseName, COUNT(e.StudentID) AS TotalStudents
+FROM Courses c
+LEFT JOIN Enrollments e ON c.CourseID = e.CourseID
+GROUP BY c.CourseName;
+
+-- 12. Find names of students and courses they are enrolled in.
+SELECT s.Name, c.CourseName
+FROM Students s
+JOIN Enrollments e ON s.StudentID = e.StudentID
+JOIN Courses c ON e.CourseID = c.CourseID;
+
+-- 13. Find students not enrolled in any course.
+SELECT s.*
+FROM Students s
+LEFT JOIN Enrollments e ON s.StudentID = e.StudentID
+WHERE e.StudentID IS NULL;
+
+-- 14. Add a new column Email (VARCHAR) to Students.
+ALTER TABLE Students ADD Email VARCHAR(100);
+
+-- 15. Find average age of students in each grade.
+SELECT Grade, AVG(Age) AS AvgAge
+FROM Students
+GROUP BY Grade;
+
+-- 16. Retrieve students sorted by Name in descending order.
+SELECT * FROM Students
+ORDER BY Name DESC;
+
+-- 17. Create a view StudentCourseView listing StudentName, CourseName, Instructor.
+CREATE VIEW StudentCourseView AS
+SELECT s.Name AS StudentName, c.CourseName, c.Instructor
+FROM Students s
+JOIN Enrollments e ON s.StudentID = e.StudentID
+JOIN Courses c ON e.CourseID = c.CourseID;
+
+-- 18. Find courses with no students enrolled.
+SELECT c.*
+FROM Courses c
+LEFT JOIN Enrollments e ON c.CourseID = e.CourseID
+WHERE e.CourseID IS NULL;
+
+-- 19. Create an index on the Name column of Students.
+CREATE INDEX idx_students_name ON Students(Name);
+
+-- 20. Find top 3 youngest students.
+SELECT *
+FROM Students
+ORDER BY Age ASC
+LIMIT 3;
+
+-- 21. Stored procedure to insert a new student.
+DELIMITER //
+CREATE PROCEDURE InsertStudent(
+    IN p_StudentID INT,
+    IN p_Name VARCHAR(50),
+    IN p_Age INT,
+    IN p_Grade VARCHAR(5),
+    IN p_Email VARCHAR(100)
+)
+BEGIN
+    INSERT INTO Students (StudentID, Name, Age, Grade, Email)
+    VALUES (p_StudentID, p_Name, p_Age, p_Grade, p_Email);
+END //
+DELIMITER ;
+
+-- 22. Trigger to update LastUpdated timestamp on student update.
+ALTER TABLE Students ADD LastUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+-- 23. Create Departments table.
+CREATE TABLE Departments (
+    DepartmentID INT PRIMARY KEY,
+    DepartmentName VARCHAR(50)
+);
+
+-- 24. Add DepartmentID to Courses and set as foreign key.
+ALTER TABLE Courses ADD DepartmentID INT;
+ALTER TABLE Courses ADD CONSTRAINT fk_courses_department
+    FOREIGN KEY (DepartmentID) REFERENCES Departments(DepartmentID);
+
+-- 25. Find all courses offered by 'Science' department.
+SELECT c.*
+FROM Courses c
+JOIN Departments d ON c.DepartmentID = d.DepartmentID
+WHERE d.DepartmentName = 'Science';
+
+-- 26. Find number of courses in each department.
+SELECT d.DepartmentName, COUNT(c.CourseID) AS CourseCount
+FROM Departments d
+LEFT JOIN Courses c ON d.DepartmentID = c.DepartmentID
+GROUP BY d.DepartmentName;
+
+-- 27. Normalization to 3NF is theoretical; example tables already follow 3NF.
+
+-- 28. Find students enrolled in more than two courses.
+SELECT s.Name, COUNT(e.CourseID) AS CourseCount
+FROM Students s
+JOIN Enrollments e ON s.StudentID = e.StudentID
+GROUP BY s.StudentID, s.Name
+HAVING COUNT(e.CourseID) > 2;
+
+-- 29. Find courses with more than 5 students (GROUP BY + HAVING).
+SELECT c.CourseName, COUNT(e.StudentID) AS StudentCount
+FROM Courses c
+JOIN Enrollments e ON c.CourseID = e.CourseID
+GROUP BY c.CourseName
+HAVING COUNT(e.StudentID) > 5;
+
+-- 30. Delete all students not enrolled in any course.
+DELETE FROM Students
+WHERE StudentID NOT IN (SELECT DISTINCT StudentID FROM Enrollments);
