@@ -1,8 +1,6 @@
-Database: SchoolDb 
-Tables:Students, Courses, Enrollments
-===========================================
---SQL ASSIGNMENT1
-===========================================
+- ===========================================
+-- SQL ASSIGNMENT1
+- ===========================================
 -- 1. Create a database named SchoolDB.
 CREATE DATABASE SchoolDB;
 
@@ -270,3 +268,139 @@ SELECT * FROM Employees WHERE Salary IS NOT NULL;
 
 -- Display employee full names by concatenating first and last names.
 SELECT CONCAT(FirstName, ' ', LastName) AS FullName FROM Employees;
+
+-- ========================
+-- JOINS & RELATIONSHIPS
+-- ========================
+
+-- Create a table Departments with DeptID and DeptName.
+CREATE TABLE Departments (
+    DeptID INT PRIMARY KEY AUTO_INCREMENT,
+    DeptName VARCHAR(50)
+);
+
+-- Add a foreign key DeptID in Employees referencing Departments.
+ALTER TABLE Employees ADD DeptID INT;
+ALTER TABLE Employees ADD CONSTRAINT FK_Employees_Dept FOREIGN KEY (DeptID) REFERENCES Departments(DeptID);
+
+-- Insert sample data into Departments.
+INSERT INTO Departments (DeptName) VALUES
+('Finance'),
+('HR'),
+('IT'),
+('Marketing');
+
+-- Write a query to list employees along with their department names using INNER JOIN.
+SELECT e.FirstName, e.LastName, d.DeptName
+FROM Employees e
+INNER JOIN Departments d ON e.DeptID = d.DeptID;
+
+-- Write a query to find departments with no employees (LEFT JOIN).
+SELECT d.DeptName
+FROM Departments d
+LEFT JOIN Employees e ON d.DeptID = e.DeptID
+WHERE e.EmpID IS NULL;
+
+-- Find employees who work in the 'Finance' department.
+SELECT e.*
+FROM Employees e
+JOIN Departments d ON e.DeptID = d.DeptID
+WHERE d.DeptName = 'Finance';
+
+-- Write a query to show employees and their managers (self-join).
+ALTER TABLE Employees ADD ManagerID INT;
+SELECT e.FirstName AS Employee, m.FirstName AS Manager
+FROM Employees e
+LEFT JOIN Employees m ON e.ManagerID = m.EmpID;
+
+-- Create a table Projects with ProjectID, ProjectName, DeptID.
+CREATE TABLE Projects (
+    ProjectID INT PRIMARY KEY AUTO_INCREMENT,
+    ProjectName VARCHAR(100),
+    DeptID INT,
+    FOREIGN KEY (DeptID) REFERENCES Departments(DeptID)
+);
+
+-- Create a table EmployeeProjects to map employees to projects (many-to-many).
+CREATE TABLE EmployeeProjects (
+    EmpID INT,
+    ProjectID INT,
+    PRIMARY KEY (EmpID, ProjectID),
+    FOREIGN KEY (EmpID) REFERENCES Employees(EmpID),
+    FOREIGN KEY (ProjectID) REFERENCES Projects(ProjectID)
+);
+
+-- List all projects with their employee names using JOINS.
+SELECT p.ProjectName, e.FirstName, e.LastName
+FROM Projects p
+JOIN EmployeeProjects ep ON p.ProjectID = ep.ProjectID
+JOIN Employees e ON ep.EmpID = e.EmpID;
+
+
+-- ========================
+-- AGGREGATION & GROUPING
+-- ========================
+
+-- Calculate total salary paid per department.
+SELECT d.DeptName, SUM(e.Salary) AS TotalSalary
+FROM Employees e
+JOIN Departments d ON e.DeptID = d.DeptID
+GROUP BY d.DeptName;
+
+-- Find the department with the highest average salary.
+SELECT d.DeptName, AVG(e.Salary) AS AvgSalary
+FROM Employees e
+JOIN Departments d ON e.DeptID = d.DeptID
+GROUP BY d.DeptName
+ORDER BY AvgSalary DESC
+LIMIT 1;
+
+-- Find employees grouped by age brackets (e.g., <30, 30-40, 40).
+SELECT
+    CASE
+        WHEN TIMESTAMPDIFF(YEAR, DOB, CURDATE()) < 30 THEN '<30'
+        WHEN TIMESTAMPDIFF(YEAR, DOB, CURDATE()) BETWEEN 30 AND 40 THEN '30-40'
+        ELSE '>40'
+    END AS AgeBracket,
+    COUNT(*) AS EmployeeCount
+FROM Employees
+GROUP BY AgeBracket;
+
+-- List departments having more than 3 employees.
+SELECT DeptName, COUNT(*) AS EmployeeCount
+FROM Employees
+GROUP BY DeptName
+HAVING COUNT(*) > 3;
+
+-- Find the minimum and maximum salary per department.
+SELECT DeptName, MIN(Salary) AS MinSalary, MAX(Salary) AS MaxSalary
+FROM Employees
+GROUP BY DeptName;
+
+-- Show departments ordered by total employee count descending.
+SELECT DeptName, COUNT(*) AS EmployeeCount
+FROM Employees
+GROUP BY DeptName
+ORDER BY EmployeeCount DESC;
+
+-- Find the second highest salary in the company.
+SELECT MAX(Salary) AS SecondHighestSalary
+FROM Employees
+WHERE Salary < (SELECT MAX(Salary) FROM Employees);
+
+-- Find departments where average salary is below 50,000.
+SELECT DeptName, AVG(Salary) AS AvgSalary
+FROM Employees
+GROUP BY DeptName
+HAVING AVG(Salary) < 50000;
+
+-- Use HAVING clause to filter grouped results.
+SELECT DeptName, SUM(Salary) AS TotalSalary
+FROM Employees
+GROUP BY DeptName
+HAVING SUM(Salary) > 200000;
+
+-- Count employees with NULL department assignment.
+SELECT COUNT(*) AS UnassignedEmployees
+FROM Employees
+WHERE DeptID IS NULL;
