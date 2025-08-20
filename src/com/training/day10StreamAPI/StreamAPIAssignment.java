@@ -1,5 +1,7 @@
-package com.training.streamAPI;
+package com.training.day10StreamAPI;
 import java.util.*;
+import java.util.stream.Collectors;
+
 import static java.util.stream.Collectors.*;
 
 class Employee {
@@ -97,5 +99,46 @@ public class StreamAPIAssignment {
                 .limit(3)
                 .collect(toList());
         System.out.println("9. " + firstThree);
+        
+     // 10. Multiply all numbers using reduce
+        List<Integer> numbers = Arrays.asList(40, 15, 25, 20, 35, 7);
+        int product = numbers.stream()
+                             .reduce(1, (a, b) -> a * b);
+        System.out.println("Q10 Output: " + product); 
+
+        // 11. Count distinct words (case-insensitive)
+        String sentence = "Java is great. JAVA is powerful.";
+        long distinctWordCount = Arrays.stream(sentence.toLowerCase().split("\\W+"))
+                                       .filter(w -> !w.isEmpty())
+                                       .distinct()
+                                       .count();
+        System.out.println("Q11 Output: " + distinctWordCount); 
+
+        // 12. Find names starting with 'A'
+        List<String> names1 = Arrays.asList("Alice", "Bob", "Andrew", "Tom");
+        List<String> namesWithA = names1.stream()
+                                       .filter(name -> name.startsWith("A"))
+                                       .collect(Collectors.toList());
+        System.out.println("Q12 Output: " + namesWithA); 
+
+        // 13. Find longest string
+        List<String> animals1 = Arrays.asList("cat", "elephant", "dog");
+        String longest = animals1.stream()
+                                .max(Comparator.comparingInt(String::length))
+                                .orElse("");
+        System.out.println("Q13 Output: " + longest); // elephant
+
+        // 14. Count occurrences of each word
+        String text = "apple banana apple orange banana apple";
+        Map<String, Long> wordCount = Arrays.stream(text.split(" "))
+                                            .collect(Collectors.groupingBy(w -> w, Collectors.counting()));
+        System.out.println("Q14 Output: " + wordCount); 
+
+        // 15. Join uppercase names with delimiter
+        List<String> people = Arrays.asList("john", "alice", "mark");
+        String joined1 = people.stream()
+                              .map(String::toUpperCase)
+                              .collect(Collectors.joining(" "));
+        System.out.println("Q15 Output: " + joined1);
     }
 }
