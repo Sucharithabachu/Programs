@@ -1,0 +1,171 @@
+-- Stored Procedure Assignment
+create database day14assignment;
+use day14assignment;
+-- Table: employees 
+CREATE TABLE employees ( 
+	emp_id INT PRIMARY KEY, 
+	name VARCHAR(50), 
+	department VARCHAR(50), 
+    salary DECIMAL(10, 2) 
+    );
+ INSERT INTO employees VALUES 
+	(1, 'Alice', 'HR', 50000), 
+    (2, 'Bob', 'IT', 60000), 
+    (3, 'Charlie', 'IT', 55000), 
+    (4, 'David', 'Sales', 70000), 
+    (5, 'Eva', 'Sales', 65000);
+    
+ -- Table: departments 
+ CREATE TABLE departments ( 
+	dept_id INT PRIMARY KEY, 
+	name VARCHAR(50), 
+	location VARCHAR(50) 
+	); 
+    
+ INSERT INTO departments VALUES 
+    (1, 'HR', 'New York'), 
+	(2, 'IT', 'San Francisco'), 
+	(3, 'Sales', 'Chicago'); 
+    
+ -- Table: orders 
+ CREATE TABLE orders (
+	order_id INT PRIMARY KEY, 
+    customer_name VARCHAR(50), 
+    amount DECIMAL(10, 2), 
+    order_date DATE 
+    ); 
+    
+ INSERT INTO orders VALUES 
+    (101, 'John Doe', 1200.50, '2025-08-01'), 
+    (102, 'Jane Smith', 800.75, '2025-08-02'), 
+    (103, 'Alice Brown', 500.00, '2025-08-03');
+    
+-- Q1. Create a procedure 'GetAllEmployees' to display all employees
+DROP PROCEDURE IF EXISTS GetAllEmployees;
+DELIMITER //
+CREATE PROCEDURE GetAllEmployees()
+BEGIN
+    SELECT * FROM employees;
+END //
+DELIMITER ;
+
+CALL GetAllEmployees();
+
+-- Q2. Create Procedure 'GetEmployeesByDepartment' to get employee by department
+DROP PROCEDURE IF EXISTS GetEmployeesByDepartment;
+DELIMITER //
+CREATE PROCEDURE GetEmployeesByDepartment(IN deptName VARCHAR(50))
+BEGIN
+    SELECT * FROM employees
+    WHERE department = deptName;
+END //
+DELIMITER ;
+
+CALL GetEmployeesByDepartment('IT');
+
+-- Q3. Insert a new employee using stored procedure 'AddEmployee'
+DROP PROCEDURE IF EXISTS AddEmployee;
+DELIMITER //
+CREATE PROCEDURE AddEmployee(
+    IN p_empid INT,
+    IN p_name VARCHAR(50),
+    IN p_department VARCHAR(50),
+    IN p_salary DECIMAL(10,2)
+)
+BEGIN
+    INSERT INTO employees(emp_id, name, department, salary)
+    VALUES (p_empid, p_name, p_department, p_salary);
+END //
+DELIMITER ;
+
+CALL AddEmployee(6, 'Sai', 'HR', 52000);
+SELECT * FROM employees;
+
+-- Q4. Update employee salary 'UpdateSalary'
+DROP PROCEDURE IF EXISTS UpdateSalary;
+DELIMITER //
+CREATE PROCEDURE UpdateSalary(IN p_empid INT, IN p_salary DECIMAL(10,2))
+BEGIN
+    UPDATE employees
+    SET salary = p_salary
+    WHERE emp_id = p_empid;
+END //
+DELIMITER ;
+
+CALL UpdateSalary(2, 65000);
+SELECT * FROM employees WHERE emp_id = 2;
+
+-- Q5. Delete an employee by id 'DeleteEmployeeById'
+DROP PROCEDURE IF EXISTS DeleteEmployeeById;
+DELIMITER //
+CREATE PROCEDURE DeleteEmployeeById(IN p_empid INT)
+BEGIN
+    DELETE FROM employees
+    WHERE emp_id = p_empid;
+END //
+DELIMITER ;
+CALL DeleteEmployeeById(6);
+SELECT * FROM employees;
+
+-- Q6. Get total salary by department 'GetTotalSalaryByDept'
+DROP PROCEDURE IF EXISTS GetTotalSalaryByDept;
+DELIMITER //
+CREATE PROCEDURE GetTotalSalaryByDept(IN deptName VARCHAR(50))
+BEGIN
+    SELECT department, SUM(salary) AS total_salary
+    FROM employees
+    WHERE department = deptName
+    GROUP BY department;
+END //
+DELIMITER ;
+
+CALL GetTotalSalaryByDept('Sales');
+
+-- Q7. Get order details above a certain amount 'GetOrdersAboveAmount'
+DROP PROCEDURE IF EXISTS GetOrdersAboveAmount;
+DELIMITER //
+CREATE PROCEDURE GetOrdersAboveAmount(IN minAmount DECIMAL(10,2))
+BEGIN
+    SELECT * FROM orders
+    WHERE amount > minAmount;
+END //
+DELIMITER ;
+
+CALL GetOrdersAboveAmount(1000);
+
+-- Q8. Get department location by name 'GetDepartLocation'
+DROP PROCEDURE IF EXISTS GetDepartLocation;
+DELIMITER //
+CREATE PROCEDURE GetDepartLocation(IN deptName VARCHAR(50))
+BEGIN
+    SELECT location
+    FROM departments
+    WHERE name = deptName;
+END //
+DELIMITER ;
+CALL GetDepartLocation('IT');
+
+-- Q9. Get highest paid employee 'GetHighestPaidEmployee'
+DROP PROCEDURE IF EXISTS GetHighestPaidEmployee;
+DELIMITER //
+CREATE PROCEDURE GetHighestPaidEmployee()
+BEGIN
+    SELECT *
+    FROM employees
+    ORDER BY salary DESC
+    LIMIT 1;
+END //
+DELIMITER ;
+CALL GetHighestPaidEmployee();
+
+-- Q10. Count of employees in each department 'CountEmployeesByDepartment'
+DROP PROCEDURE IF EXISTS CountEmployeesByDepartment;
+DELIMITER //
+CREATE PROCEDURE CountEmployeesByDepartment()
+BEGIN
+    SELECT department, COUNT(*) AS employee_count
+    FROM employees
+    GROUP BY department;
+END //
+DELIMITER ;
+CALL CountEmployeesByDepartment();
