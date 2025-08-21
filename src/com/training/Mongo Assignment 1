@@ -1,0 +1,442 @@
+-------------------------------------------------------------------------------------------------------
+Mongo Assignment 1 Q&A
+-------------------------------------------------------------------------------------------------------
+Data Set 1: Users
+[
+ { "name": "Alice", "age": 25, "email": "alice@example.com", "status": "active" },
+ { "name": "Bob", "age": 30, "email": "bob@example.com", "status": "inactive" },
+ { "name": "Charlie", "age": 22, "email": "charlie@example.com" },
+ { "name": "David", "age": 35, "email": "david@example.com", "status": "active" }
+]
+
+// Assignment 1: Find users older than 25
+db.users.find({ age: { $gt: 25 } })
+
+// Assignment 2: Find users where status field exists
+db.users.find({ status: { $exists: true } })
+
+// Assignment 3: Update user Bob's status to "active"
+db.users.updateOne({ name: "Bob" }, { $set: { status: "active" } })
+
+// Assignment 4: Increase Alice's age by 1
+db.users.updateOne({ name: "Alice" }, { $inc: { age: 1 } })
+
+Data Set 2: Products 
+[
+ { "name": "Laptop", "price": 1200, "tags": ["electronics", "computer"] },
+ { "name": "Phone", "price": 800, "tags": ["electronics", "mobile"] },
+ { "name": "Shoes", "price": 150, "tags": ["fashion", "clothing"] },
+ { "name": "Watch", "price": 300, "tags": ["fashion", "accessory"] }
+]
+
+
+// Assignment 5: Find products with price less than or equal to 500
+db.products.find({ price: { $lte: 500 } })
+
+// Assignment 6: Find products that have "electronics" in tags
+db.products.find({ tags: { $in: ["electronics"] } })
+
+// Assignment 7: Add a new field stock: 100 to all products
+db.products.updateMany({}, { $set: { stock: 100 } })
+
+// Assignment 8: Rename field price to cost
+db.products.updateMany({}, { $rename: { "price": "cost" } })
+
+Data Set 3: Orders
+
+[
+ { "orderId": 1, "total": 500, "items": 3, "date": "2025-08-01" },
+ { "orderId": 2, "total": 1200, "items": 6, "date": "2025-08-10" },
+ { "orderId": 3, "total": 750, "items": 4, "date": "2025-08-15" }
+]
+
+
+// Assignment 9: Find orders where total is not equal to 750
+db.orders.find({ total: { $ne: 750 } })
+
+// Assignment 10: Remove the items field from all orders
+db.orders.updateMany({}, { $unset: { items: "" } })
+
+// Assignment 11: Multiply the total of each order by 1.1 (e.g., tax)
+db.orders.updateMany({}, { $mul: { total: 1.1 } })
+
+// Assignment 12: Find all orders placed after "2025-08-05"
+db.orders.find({ date: { $gt: "2025-08-05" } })
+
+Data Set 4: Students
+
+[
+ { "name": "Eva", "grades": [85, 90, 78] },
+ { "name": "Frank", "grades": [60, 75, 80] },
+ { "name": "Grace", "grades": [95, 100, 98] }
+]
+
+
+// Assignment 13: Find students with a grade of 100
+db.students.find({ grades: { $in: [100] } })
+
+// Assignment 14: Add a grade 88 to Eva's grades only if not already there
+db.students.updateOne({ name: "Eva" }, { $addToSet: { grades: 88 } })
+
+// Assignment 15: Remove the last grade from Frank's grades
+db.students.updateOne({ name: "Frank" }, { $pop: { grades: 1 } })
+
+// Assignment 16: Find students with a grade greater than 90
+db.students.find({ grades: { $elemMatch: { $gt: 90 } } })
+
+Data Set 5: Employees
+
+[
+ { "name": "Henry", "salary": 50000, "department": "HR" },
+ { "name": "Irene", "salary": 60000, "department": "IT" },
+ { "name": "Jack", "salary": 55000, "department": "IT" },
+ { "name": "Karen", "salary": 70000, "department": "Sales" }
+]
+
+// Assignment 17: Group employees by department and get total salary
+db.employees.aggregate([
+  { $group: { _id: "$department", totalSalary: { $sum: "$salary" } } }
+])
+
+// Assignment 18: Find the average salary across all employees
+db.employees.aggregate([
+  { $group: { _id: null, avgSalary: { $avg: "$salary" } } }
+])
+
+// Assignment 19: Show only employee names and salaries
+db.employees.aggregate([
+  { $project: { _id: 0, name: 1, salary: 1 } }
+])
+
+// Assignment 20: Sort employees by salary descending
+db.employees.aggregate([
+  { $sort: { salary: -1 } }
+])
+-------------------------------------------------------------------------------------------------------
+Executed Queries
+-------------------------------------------------------------------------------------------------------
+test> use day12assignment
+switched to db day12assignment
+day12assignment> show dbs
+admin       40.00 KiB
+companyDB  136.00 KiB
+config      48.00 KiB
+customers  112.00 KiB
+local       72.00 KiB
+sampleDB    40.00 KiB
+day12assignment> db.users.insertMany([
+...  { "name": "Alice", "age": 25, "email": "alice@example.com", "status": "active" },
+...  { "name": "Bob", "age": 30, "email": "bob@example.com", "status": "inactive" },
+...  { "name": "Charlie", "age": 22, "email": "charlie@example.com" },
+...  { "name": "David", "age": 35, "email": "david@example.com", "status": "active" }
+... ])
+...
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('68a74cd8b3260cf8ebeec4a9'),
+    '1': ObjectId('68a74cd8b3260cf8ebeec4aa'),
+    '2': ObjectId('68a74cd8b3260cf8ebeec4ab'),
+    '3': ObjectId('68a74cd8b3260cf8ebeec4ac')
+  }
+}
+day12assignment> db.products.insertMany([
+...  { "name": "Laptop", "price": 1200, "tags": ["electronics", "computer"] },
+...  { "name": "Phone", "price": 800, "tags": ["electronics", "mobile"] },
+...  { "name": "Shoes", "price": 150, "tags": ["fashion", "clothing"] },
+...  { "name": "Watch", "price": 300, "tags": ["fashion", "accessory"] }
+... ])
+...
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('68a74cebb3260cf8ebeec4ad'),
+    '1': ObjectId('68a74cebb3260cf8ebeec4ae'),
+    '2': ObjectId('68a74cebb3260cf8ebeec4af'),
+    '3': ObjectId('68a74cebb3260cf8ebeec4b0')
+  }
+}
+day12assignment> db.orders.insertMany([
+...  { "orderId": 1, "total": 500, "items": 3, "date": "2025-08-01" },
+...  { "orderId": 2, "total": 1200, "items": 6, "date": "2025-08-10" },
+...  { "orderId": 3, "total": 750, "items": 4, "date": "2025-08-15" }
+... ])
+...
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('68a74cf3b3260cf8ebeec4b1'),
+    '1': ObjectId('68a74cf3b3260cf8ebeec4b2'),
+    '2': ObjectId('68a74cf3b3260cf8ebeec4b3')
+  }
+}
+day12assignment> db.students.insertMany([
+...  { "name": "Eva", "grades": [85, 90, 78] },
+...  { "name": "Frank", "grades": [60, 75, 80] },
+...  { "name": "Grace", "grades": [95, 100, 98] }
+... ])
+...
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('68a74cfab3260cf8ebeec4b4'),
+    '1': ObjectId('68a74cfab3260cf8ebeec4b5'),
+    '2': ObjectId('68a74cfab3260cf8ebeec4b6')
+  }
+}
+day12assignment> db.employees.insertMany([
+...  { "name": "Henry", "salary": 50000, "department": "HR" },
+...  { "name": "Irene", "salary": 60000, "department": "IT" },
+...  { "name": "Jack", "salary": 55000, "department": "IT" },
+...  { "name": "Karen", "salary": 70000, "department": "Sales" }
+... ])
+...
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('68a74d04b3260cf8ebeec4b7'),
+    '1': ObjectId('68a74d04b3260cf8ebeec4b8'),
+    '2': ObjectId('68a74d04b3260cf8ebeec4b9'),
+    '3': ObjectId('68a74d04b3260cf8ebeec4ba')
+  }
+}
+day12assignment> show collections
+employees
+orders
+products
+students
+users
+day12assignment> db.users.find({ age: { $gt: 25 } })
+[
+  {
+    _id: ObjectId('68a74cd8b3260cf8ebeec4aa'),
+    name: 'Bob',
+    age: 30,
+    email: 'bob@example.com',
+    status: 'inactive'
+  },
+  {
+    _id: ObjectId('68a74cd8b3260cf8ebeec4ac'),
+    name: 'David',
+    age: 35,
+    email: 'david@example.com',
+    status: 'active'
+  }
+]
+day12assignment> db.users.find({ status: { $exists: true } })
+[
+  {
+    _id: ObjectId('68a74cd8b3260cf8ebeec4a9'),
+    name: 'Alice',
+    age: 25,
+    email: 'alice@example.com',
+    status: 'active'
+  },
+  {
+    _id: ObjectId('68a74cd8b3260cf8ebeec4aa'),
+    name: 'Bob',
+    age: 30,
+    email: 'bob@example.com',
+    status: 'inactive'
+  },
+  {
+    _id: ObjectId('68a74cd8b3260cf8ebeec4ac'),
+    name: 'David',
+    age: 35,
+    email: 'david@example.com',
+    status: 'active'
+  }
+]
+day12assignment> db.users.updateOne({ name: "Bob" }, { $set: { status: "active" } })
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+day12assignment> db.users.updateOne({ name: "Alice" }, { $inc: { age: 1 } })
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+day12assignment> db.products.find({ price: { $lte: 500 } })
+[
+  {
+    _id: ObjectId('68a74cebb3260cf8ebeec4af'),
+    name: 'Shoes',
+    price: 150,
+    tags: [ 'fashion', 'clothing' ]
+  },
+  {
+    _id: ObjectId('68a74cebb3260cf8ebeec4b0'),
+    name: 'Watch',
+    price: 300,
+    tags: [ 'fashion', 'accessory' ]
+  }
+]
+day12assignment> db.products.find({ tags: { $in: ["electronics"] } })
+[
+  {
+    _id: ObjectId('68a74cebb3260cf8ebeec4ad'),
+    name: 'Laptop',
+    price: 1200,
+    tags: [ 'electronics', 'computer' ]
+  },
+  {
+    _id: ObjectId('68a74cebb3260cf8ebeec4ae'),
+    name: 'Phone',
+    price: 800,
+    tags: [ 'electronics', 'mobile' ]
+  }
+]
+day12assignment> db.products.updateMany({}, { $set: { stock: 100 } })
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 4,
+  modifiedCount: 4,
+  upsertedCount: 0
+}
+day12assignment> db.products.updateMany({}, { $rename: { "price": "cost" } })
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 4,
+  modifiedCount: 4,
+  upsertedCount: 0
+}
+day12assignment> db.orders.find({ total: { $ne: 750 } })
+[
+  {
+    _id: ObjectId('68a74cf3b3260cf8ebeec4b1'),
+    orderId: 1,
+    total: 500,
+    items: 3,
+    date: '2025-08-01'
+  },
+  {
+    _id: ObjectId('68a74cf3b3260cf8ebeec4b2'),
+    orderId: 2,
+    total: 1200,
+    items: 6,
+    date: '2025-08-10'
+  }
+]
+day12assignment> db.orders.updateMany({}, { $unset: { items: "" } })
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 3,
+  modifiedCount: 3,
+  upsertedCount: 0
+}
+day12assignment> db.orders.updateMany({}, { $mul: { total: 1.1 } })
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 3,
+  modifiedCount: 3,
+  upsertedCount: 0
+}
+day12assignment> db.orders.find({ date: { $gt: "2025-08-05" } })
+[
+  {
+    _id: ObjectId('68a74cf3b3260cf8ebeec4b2'),
+    orderId: 2,
+    total: 1320,
+    date: '2025-08-10'
+  },
+  {
+    _id: ObjectId('68a74cf3b3260cf8ebeec4b3'),
+    orderId: 3,
+    total: 825.0000000000001,
+    date: '2025-08-15'
+  }
+]
+day12assignment> db.students.find({ grades: { $in: [100] } })
+[
+  {
+    _id: ObjectId('68a74cfab3260cf8ebeec4b6'),
+    name: 'Grace',
+    grades: [ 95, 100, 98 ]
+  }
+]
+day12assignment> db.students.updateOne({ name: "Eva" }, { $addToSet: { gradegrades: 88 } })
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+day12assignment> db.students.updateOne({ name: "Frank" }, { $pop: { grades: 1 } })
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+day12assignment> db.students.find({ grades: { $elemMatch: { $gt: 90 } } })
+[
+  {
+    _id: ObjectId('68a74cfab3260cf8ebeec4b6'),
+    name: 'Grace',
+    grades: [ 95, 100, 98 ]
+  }
+]
+day12assignment> db.employees.aggregate([
+...   { $group: { _id: "$department", totalSalary: { $sum: "$salary" } } }
+... ])
+[
+  { _id: 'Sales', totalSalary: 70000 },
+  { _id: 'IT', totalSalary: 115000 },
+  { _id: 'HR', totalSalary: 50000 }
+]
+day12assignment> db.employees.aggregate([
+...   { $group: { _id: null, avgSalary: { $avg: "$salary" } } }
+... ])
+[ { _id: null, avgSalary: 58750 } ]
+day12assignment> db.employees.aggregate([
+...   { $project: { _id: 0, name: 1, salary: 1 } }
+... ])
+[
+  { name: 'Henry', salary: 50000 },
+  { name: 'Irene', salary: 60000 },
+  { name: 'Jack', salary: 55000 },
+  { name: 'Karen', salary: 70000 }
+]
+day12assignment> db.employees.aggregate([
+...   { $sort: { salary: -1 } }
+... ])
+...
+[
+  {
+    _id: ObjectId('68a74d04b3260cf8ebeec4ba'),
+    name: 'Karen',
+    salary: 70000,
+    department: 'Sales'
+  },
+  {
+    _id: ObjectId('68a74d04b3260cf8ebeec4b8'),
+    name: 'Irene',
+    salary: 60000,
+    department: 'IT'
+  },
+  {
+    _id: ObjectId('68a74d04b3260cf8ebeec4b9'),
+    name: 'Jack',
+    salary: 55000,
+    department: 'IT'
+  },
+  {
+    _id: ObjectId('68a74d04b3260cf8ebeec4b7'),
+    name: 'Henry',
+    salary: 50000,
+    department: 'HR'
+  }
+]
