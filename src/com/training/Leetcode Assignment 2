@@ -1,0 +1,153 @@
+14.
+class Solution {
+    public String longestCommonPrefix(String[] strs) {
+        if (strs == null || strs.length == 0) return "";
+
+        // Take the first string as the initial prefix
+        String prefix = strs[0];
+
+        // Compare with remaining strings
+        for (int i = 1; i < strs.length; i++) {
+            // Reduce prefix until it matches the start of strs[i]
+            while (!strs[i].startsWith(prefix)) {
+                prefix = prefix.substring(0, prefix.length() - 1);
+                if (prefix.isEmpty()) return "";
+            }
+        }
+        return prefix;
+    }
+}
+
+
+28.
+class Solution {
+    public int strStr(String haystack, String needle) {
+        if (needle.isEmpty()) return 0;  // edge case
+        return haystack.indexOf(needle); // Java built-in
+    }
+}
+
+387.
+class Solution {
+    public int firstUniqChar(String s) {
+        int[] freq = new int[26]; // frequency of characters
+
+        // Count frequency
+        for (char c : s.toCharArray()) {
+            freq[c - 'a']++;
+        }
+
+        // Find first character with frequency 1
+        for (int i = 0; i < s.length(); i++) {
+            if (freq[s.charAt(i) - 'a'] == 1) return i;
+        }
+
+        return -1; // no unique character
+    }
+}
+
+
+1636.
+import java.util.*;
+
+class Solution {
+    public int[] frequencySort(int[] nums) {
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int num : nums) {
+            freq.put(num, freq.getOrDefault(num, 0) + 1);
+        }
+
+        return Arrays.stream(nums)
+                .boxed()
+                .sorted((a, b) -> {
+                    int freqCompare = freq.get(a) - freq.get(b);
+                    if (freqCompare == 0) return b - a; // if same frequency → larger first
+                    return freqCompare;
+                })
+                .mapToInt(Integer::intValue)
+                .toArray();
+    }
+}
+
+
+1122.
+import java.util.*;
+
+class Solution {
+    public int[] relativeSortArray(int[] arr1, int[] arr2) {
+        Map<Integer, Integer> order = new HashMap<>();
+        for (int i = 0; i < arr2.length; i++) {
+            order.put(arr2[i], i); // store position of each element in arr2
+        }
+
+        // Sort arr1 with custom comparator
+        return Arrays.stream(arr1)
+                .boxed()
+                .sorted((a, b) -> {
+                    if (order.containsKey(a) && order.containsKey(b)) {
+                        return order.get(a) - order.get(b); // order according to arr2
+                    } else if (order.containsKey(a)) {
+                        return -1; // a comes before b
+                    } else if (order.containsKey(b)) {
+                        return 1; // b comes before a
+                    } else {
+                        return a - b; // both not in arr2 → ascending
+                    }
+                })
+                .mapToInt(Integer::intValue)
+                .toArray();
+    }
+}
+
+
+12.
+class Solution {
+    public String intToRoman(int num) {
+        // Values and corresponding Roman symbols
+        int[] values =    {1000, 900, 500, 400, 100, 90,  50,  40,  10, 9, 5, 4, 1};
+        String[] symbols ={"M", "CM","D", "CD","C","XC","L","XL","X","IX","V","IV","I"};
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < values.length && num > 0; i++) {
+            while (num >= values[i]) {
+                num -= values[i];
+                sb.append(symbols[i]);
+            }
+        }
+
+        return sb.toString();
+    }
+}
+
+
+
+13.
+import java.util.Map;
+
+class Solution {
+    public int romanToInt(String s) {
+        // Map Roman numerals to integers
+        Map<Character, Integer> map = Map.of(
+            'I', 1, 'V', 5, 'X', 10, 'L', 50,
+            'C', 100, 'D', 500, 'M', 1000
+        );
+
+        int total = 0;
+
+        for (int i = 0; i < s.length(); i++) {
+            int value = map.get(s.charAt(i));
+
+            // If current is less than next → subtract (like IV = 4)
+            if (i < s.length() - 1 && value < map.get(s.charAt(i + 1))) {
+                total -= value;
+            } else {
+                total += value;
+            }
+        }
+
+        return total;
+    }
+}
+
+
